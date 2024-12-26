@@ -1,0 +1,21 @@
+{
+    "company_name": "Company Name",
+    "company_description": "ABC is an innovative online platform that connects hobbyists with experienced providers of unique and enriching workshops. Whether you're looking to explore new hobbies like pottery, painting, sewing, or photography, ABC offers a wide variety of hands-on classes and experiences tailored to your interests. For seekers, ABC serves as a hub for discovering exciting new passions and expanding personal skills, all within a community of creative and passionate individuals. For providers, ABC offers a platform to showcase their expertise and connect with learners eager to explore new avenues of creativity. With easy booking, clear communication, and a wide range of options, ABC makes it simple to learn something new, meet like-minded people, and grow your skills. At ABC, we believe in the power of learning, creativity, and community. Join us today to explore, create, and grow!",
+    "customers": [
+        {
+            "email": "customer@example.com",
+            "name": "Pottery Studio by EarthCraft",
+            "description": "EarthCraft is a pottery studio where you can get your hands dirty and create beautiful, handmade ceramics. Whether you’re new to pottery or looking to refine your skills, our experienced instructors provide personalized guidance in wheel-throwing, hand-building, glazing, and firing techniques. At EarthCraft, we believe in the therapeutic and creative power of working with clay. Our workshops cater to all skill levels, offering a relaxing and inspiring environment for you to explore your artistic potential. Come join us and craft your own story in clay!"
+        },
+        {
+            "email": "customer2@example.com",
+            "name": "Sewing Bliss Boutique",
+            "description": "Sewing Bliss Boutique offers a range of workshops to help you discover the joy of sewing and garment-making. From beginner lessons to advanced techniques in fashion design and alteration, our expert instructors provide hands-on guidance in every class. Learn to sew your own clothes, make personalized gifts, or simply enjoy the meditative art of stitching. We use high-quality fabrics and modern equipment to help you unleash your creativity while mastering the craft of sewing. Join us at Sewing Bliss Boutique and stitch together memories that will last a lifetime!"
+        },
+        {
+            "email": "customer3@example.com",
+            "name": "Creative Minds Art Studio",
+            "description": "Creative Minds Art Studio offers workshops in a variety of artistic disciplines, including drawing, painting, and mixed media. Whether you're a beginner who wants to learn basic sketching or an experienced artist looking to experiment with new mediums, our studio provides a welcoming space for everyone. Our passionate instructors bring both creativity and expertise to each class, ensuring that you’ll leave with new skills and a personal connection to your art. We believe in fostering self-expression and confidence through art, and we're here to help you unlock your creative potential. Come get inspired at Creative Minds Art Studio!"
+        }
+    ]
+}

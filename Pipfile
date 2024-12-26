@@ -10,6 +10,8 @@ langchain-openai = "*"
 crewai = "*"
 python-dotenv = "*"
 google-auth-oauthlib = "*"
+google-auth-httplib2 = "*"
+pyyaml = "*"
 
 [dev-packages]
 
