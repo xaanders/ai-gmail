@@ -49,3 +49,19 @@ draft_emails_task:
   agent: email_draft_agent
   expected_output: "A JSON array of email draft objects"
     
+respond_to_emails_task:
+  description: >
+    Respond to the provided emails. Be friendly and nice, and stay professional. Don't respond to promotions and adds.  
+    Emails: {emails}
+  agent: email_response_agent
+  expected_output: >
+    A JSON array of email response objects
+    The output should be a JSON array where each email response is an object with this structure (example):
+    [
+      {{
+        "to": "sender_email",
+        "subject": "email_subject",
+        "body": "email_content"
+      }}
+    ]
+

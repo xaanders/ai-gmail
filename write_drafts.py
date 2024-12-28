@@ -2,16 +2,17 @@ from gmail import GmailHandler
 from crew import EmailCrew
 import json
 
-def main():
-
+def write_drafts(credentials_json=None):
     # Load company and customer information
     with open('descriptions.json', 'r') as f:
         descriptions = json.load(f)
     
     # Initialize EmailCrew
     email_crew = EmailCrew()
+
     gmail_handler = GmailHandler()
-    
+    gmail_handler.external_authenticate(credentials_json)
+
     # Generate email drafts
     email_drafts = email_crew.create_email_drafts(
         descriptions['company_description'],
@@ -38,6 +39,3 @@ def main():
             f.write(email_drafts_str)
     
     print("\nEmail drafts have been generated and saved to ./logs/email_drafts.json")
-
-if __name__ == "__main__":
-    main()

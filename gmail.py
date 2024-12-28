@@ -20,6 +20,7 @@ class GmailHandler:
         ]
         self.credentials = None
 
+
     def authenticate(self):
         if os.path.exists(TOKEN_FILE):
             try:
@@ -80,7 +81,6 @@ class GmailHandler:
             logging.error("Failed to save credentials: %s", e)
 
     def get_todays_emails(self):
-        self.authenticate()
         logging.info("Authenticated " + str(self.credentials))
         service = build('gmail', 'v1', credentials=self.credentials)
         logging.info("Service built " + str(service))
@@ -185,7 +185,7 @@ class GmailHandler:
         import re
         import unicodedata
 
-        if not content:
+        if not content or "<html" in content:
             return ""
 
         try:
@@ -193,7 +193,11 @@ class GmailHandler:
             content = str(content)
             # Remove zero-width and special whitespace characters
             content = re.sub(r'(&zwnj;|&#8199;|&#847;|\u200c|\u200b|\u2063)', '', content)
-
+            # Remove HTML tags, attributes, and styles
+            content = re.sub(r'<[^>]*>', '', content)
+            content = re.sub(r'style="[^"]*"', '', content)
+            content = re.sub(r'class="[^"]*"', '', content)
+            content = re.sub(r'id="[^"]*"', '', content)
             # Remove URLs
             content = re.sub(r'(https?://|www\.)\S+', '', content)
 
@@ -242,4 +246,85 @@ class GmailHandler:
         os.makedirs('./logs', exist_ok=True)
         with open('./logs/emails.json', 'w', encoding='utf-8') as f:
             json.dump(emails, f, ensure_ascii=False, indent=2)
+        
+    def get_authorization_url(self):
+        """Get the Gmail authorization URL"""
+        try:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                './credentials/credentials.json',
+                self.SCOPES
+            )
+            # Set the redirect URI to your callback endpoint
+            flow.redirect_uri = 'http://127.0.0.1:5000/auth/gmail/callback'
+            
+            authorization_url, _ = flow.authorization_url(
+                # Request offline access to get refresh token
+                access_type='offline',
+                # Force approval prompt to ensure getting refresh token
+                prompt='consent',
+                # Set token expiration to 600 seconds (10 minutes)
+                token_expiry='600',
+                include_granted_scopes='true'
+            )
+            
+            # Store the flow object for later use
+            self._flow = flow
+            return authorization_url
+            
+        except Exception as e:
+            logging.error("Failed to get authorization URL: %s", e)
+            raise
+
+    def handle_oauth_callback(self, auth_code):
+        """Handle the OAuth callback and save credentials"""
+        try:
+            if not hasattr(self, '_flow'):
+                raise ValueError("Authorization flow not initialized")
+            
+            # Fetch token with specific expiration
+            self._flow.fetch_token(
+                code=auth_code,
+                # Set token expiration to 600 seconds (10 minutes)
+                expires_in=600
+            )
+            self.credentials = self._flow.credentials
+            
+            # Save the credentials
+            cred_json = self.credentials.to_json()
+            os.makedirs('./credentials', exist_ok=True)
+            with open(TOKEN_FILE, "w") as token:
+                token.write(cred_json)
+            
+            logging.info("Credentials saved successfully")
+            
+        except Exception as e:
+            logging.error("Failed to handle OAuth callback: %s", e)
+            raise
+        
+    def check_token_status(self):
+        """Check token status and time until expiration"""
+        if not self.credentials:
+            return {
+                'valid': False,
+                'message': 'No credentials found'
+            }
+        
+        if not self.credentials.valid:
+            return {
+                'valid': False,
+                'message': 'Invalid credentials'
+            }
+        
+        if self.credentials.expiry:
+            time_until_expiry = (self.credentials.expiry - datetime.now()).total_seconds()
+            return {
+                'valid': True,
+                'expires_in': time_until_expiry,
+                'message': f'Token expires in {time_until_expiry:.0f} seconds'
+            }
+        
+        return {
+            'valid': True,
+            'message': 'Token has no expiration'
+        }
         

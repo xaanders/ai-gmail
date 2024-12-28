@@ -2,15 +2,20 @@ from gmail import GmailHandler
 from crew import EmailCrew
 import json
 
-def main():
+def summarize_mails(gmail_handler):
 
     # Load company and customer information
     email_crew = EmailCrew()
-    gmail_handler = GmailHandler()
-    
-    emails = gmail_handler.get_todays_emails()
-    filtered_emails = [email for email in emails[:8] if email['sender'] != 'needdd3@gmail.com']
-    email_crew.analyze_emails(filtered_emails)
+    # Check if the token is valid
+    valid = gmail_handler.check_token_status()['valid']
+    if not valid:
+        return {'error': 'Gmail token expired'}
 
-if __name__ == "__main__":
-    main()
+    emails = gmail_handler.get_todays_emails()
+    try:
+        analysis = email_crew.analyze_emails(emails[1:4])
+    except Exception as e:
+        return {'error': str(e)}
+    
+    return {'status': 'success', 'analysis': str(analysis)}
+

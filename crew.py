@@ -70,3 +70,18 @@ class EmailCrew:
         
         result = crew.kickoff(inputs=context)
         return result
+
+    def respond_to_emails(self, emails):
+        # Convert emails list to a proper dictionary format
+        input_data = {
+            "emails": emails
+        }
+        
+        crew = Crew(
+            agents=[self.agents['email_response_agent']],
+            tasks=[self.tasks['respond_to_emails_task']],
+            verbose=True,
+            output_file='logs/email_responses.json',
+        )
+        result = crew.kickoff(inputs=input_data)
+        return result
