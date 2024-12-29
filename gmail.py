@@ -117,7 +117,7 @@ class GmailHandler:
 
         self.save_emails_to_json(emails)
 
-        return emails
+        return emails[:3]
 
     def create_draft(self, email_data):
         """Create a draft email in Gmail"""

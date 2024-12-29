@@ -5,9 +5,6 @@ import json
 def respond_drafts(gmail_handler):
     # Initialize EmailCrew
     email_crew = EmailCrew()
-    valid = gmail_handler.check_token_status()['valid']
-    if not valid:
-        return {'error': 'Gmail token expired'}
     
     emails = gmail_handler.get_todays_emails()
     # Generate email drafts

@@ -7,11 +7,15 @@ from respond_drafts import respond_drafts
 
 app = Flask(__name__)
 
+# Global GmailHandler instance
+gmail_handler = None
+
 @app.route('/auth/gmail/init', methods=['GET'])
 def init_gmail_auth():
     """Initialize Gmail authentication"""
     try:
-        # Modify GmailHandler to return the authorization URL
+        global gmail_handler
+        # Create new GmailHandler instance
         gmail_handler = GmailHandler()
         
         auth_url = gmail_handler.get_authorization_url()
@@ -26,15 +30,21 @@ def init_gmail_auth():
 def gmail_callback():
     """Handle Gmail OAuth callback"""
     try:
+        global gmail_handler
         # Get authorization code from request
         auth_code = request.args.get('code')
+        
         if not auth_code:
             return jsonify({'error': 'No authorization code received'}), 400
-        gmail_handler = GmailHandler()
-
+        
+        if not gmail_handler:
+            return jsonify({'error': 'No active authentication flow'}), 400
+            
         # Exchange auth code for credentials
         gmail_handler.handle_oauth_callback(auth_code)
         
+        # Clear the global handler after successful authentication
+        gmail_handler = None
         return jsonify({
             'status': 'success',
             'message': 'Gmail authentication successful'
