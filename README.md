@@ -21,3 +21,10 @@ This project provides an automated system for generating personalized email draf
 - `descriptions.json`: JSON file containing company and customer information
 - `logs/`: Directory for logging generated email drafts
 
+## API branch
+
+- `api.py`: Api for the email marketing automation system
+- `respond_drafts.py`: Script to create email drafts for latest emails
+- `summarize_mails.py`: Script to summarize emails
+
+
